@@ -31,6 +31,21 @@ function askNumberOfPasswords(callback) {
     });
 }
 
+// Funkce na otazku na uzivetele na pocet znaku ve vygenerovanym hesle
+function askNumberOfCharacters(callback) {
+    rl.question('Kolik znaku v hesle chces vygenerovat? (Zadejte číslo od 1 do 9): ', (answer) => { // readline otazka na pocet znaku v hesle
+        let numberOfCharacters = parseInt(answer); // ulozeni odpovedi do promenne numberOfCharacters a prevedeni na cislo
+        
+        if (isNaN(numberOfCharacters) || numberOfCharacters < 1 || numberOfCharacters > 9) { // kontrola jestli je odpoved uzivatele cislo a jestli je mezi 1 az 9
+            console.log("Zadejte prosim platne cislo od 1 do 9."); //pokud odpoved neni platna, console vypise tohle
+            askNumberOfCharacters(callback); // znovu zavola funkci s callbackem, pokud neni platny vztup
+        } else {
+            console.log(`Pocet znaku v kazdem heslo bude: ${numberOfCharacters}`); // vypise pocet znaku
+            callback(); // callback zavola dalsi funkci po platnem vztupu
+        }
+    });
+}
+
 // funkce pro otazku pro uzivatele, jestli chce pouzit ve vygenerovanych heslech velka pismena
 function askUseUppercase() {
     rl.question('Chcete, aby hesla obsahovala velka pismena? (ano/ne): ', (answer) => { // readline otazka jestli chce uzivatel v hesle velka pismena
@@ -49,5 +64,5 @@ function askUseUppercase() {
     });
 }
 
-// Zavolani prvni funkce s callbackem pro dalsi otazku
-askNumberOfPasswords(askUseUppercase);
+// Zavolani prvni funkce s callbackem pro dalsi a dalsi otazku
+askNumberOfPasswords(() => askNumberOfCharacters(askUseUppercase));
