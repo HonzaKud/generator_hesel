@@ -1,1 +1,53 @@
-console.log(`Test githubu`);
+// Import modulu
+const readline = require('readline'); // Import modulu readline
+
+// Nastavení rozhraní pro čtení vstupu
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
+
+//let numberOfCharacters;
+//let finalPasswordArray = []; // Pole pro vygenerovane heslo
+//let characterPool = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]; // Pole pro ulozeni vsech znaku, ktere uzivatel chce mit potencialne v hesle
+//let largeCharacterArray = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]; // Pole pro velka pismena
+//let numberArray = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]; // Pole pro cislice
+//et specialCharactersArray = ["!", "@", "#", "$", "%"]; // Pole pro cislice
+
+console.log(`Toto je generator hesel, po zadani vsech vstupu uzivatele se heslo vygeneruje`);
+
+// Funkce na otazku na uzivetele na pocet hesel, ktere chce vygenerovat
+function askNumberOfPasswords(callback) {
+    rl.question('Kolik hesel chcete vygenerovat? (Zadejte číslo od 1 do 9): ', (answer) => { // readline otazka na pocet hesel omezena na 1-9
+        let numberOfPasswords = parseInt(answer); // ulozeni odpovedi do promenne numberOfPasswords a prevedeni na cislo
+        
+        if (isNaN(numberOfPasswords) || numberOfPasswords < 1 || numberOfPasswords > 9) { // kontrola jestli je odpoved uzivatele cislo a jestli je mezi 1 az 9
+            console.log("Zadejte prosim platne cislo od 1 do 9."); //pokud odpoved neni platna, console vypise tohle
+            askNumberOfPasswords(callback); // znovu zavola funkci s callbackem, pokud neni platny vztup
+        } else {
+            console.log(`Celkovy pocet hesel bude: ${numberOfPasswords}`); // vypise pocet hesel
+            callback(); // callback zavola dalsi funkci po platnem vztupu
+        }
+    });
+}
+
+// funkce pro otazku pro uzivatele, jestli chce pouzit ve vygenerovanych heslech velka pismena
+function askUseUppercase() {
+    rl.question('Chcete, aby hesla obsahovala velka pismena? (ano/ne): ', (answer) => { // readline otazka jestli chce uzivatel v hesle velka pismena
+        const normalizedAnswer = answer.toLowerCase(); // do promenne normalizedAnswer se ulozi input od uzivatele ale jeste se prevede na mala pismenena, pokud jsou velka
+        
+        if (normalizedAnswer === 'ano') {
+            console.log('Velka pismena budou zahrnuta do hesel.');
+            rl.close(); // ukonceni vstupu, pokud je odpoved platna
+        } else if (normalizedAnswer === 'ne') {
+            console.log('Velka pismena nebudou zahrnuta do hesel.');
+            rl.close(); // ukonceni vstupu, pokud je odpoved platna
+        } else {
+            console.log("Zadejte prosim pouze 'ano' nebo 'ne'.");
+            askUseUppercase(); // Znovu zavola funkci, pokud vstup neni platny
+        }
+    });
+}
+
+// Zavolani prvni funkce s callbackem pro dalsi otazku
+askNumberOfPasswords(askUseUppercase);
