@@ -9,13 +9,13 @@ const rl = readline.createInterface({
 
 //let numberOfCharacters;
 //let finalPasswordArray = []; // Pole pro vygenerovane heslo
-//let characterPool = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]; // Pole pro ulozeni vsech znaku, ktere uzivatel chce mit potencialne v hesle
-//let largeCharacterArray = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]; // Pole pro velka pismena
-//let numberArray = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]; // Pole pro cislice
-//et specialCharactersArray = ["!", "@", "#", "$", "%"]; // Pole pro cislice
+let characterPool = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]; // Pole pro ulozeni vsech znaku, ktere uzivatel chce mit potencialne v hesle
+let largeCharacterArray = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]; // Pole pro velka pismena
+let numberArray = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]; // Pole pro cislice
+let specialCharactersArray = ["!", "@", "#", "$", "%"]; // Pole pro cislice
 
 console.log(`Toto je generator hesel, po zadani vsech vstupu uzivatele se heslo vygeneruje`);
-
+console.log(`Prvni pole: ${characterPool}`);
 // Funkce na otazku na uzivetele na pocet hesel, ktere chce vygenerovat
 function askNumberOfPasswords(callback) {
     rl.question('Kolik hesel chcete vygenerovat? (Zadejte číslo od 1 do 9): ', (answer) => { // readline otazka na pocet hesel omezena na 1-9
@@ -53,6 +53,8 @@ function askUseUppercase(callback) {
         
         if (normalizedAnswer === 'ano') {
             console.log('Velka pismena budou zahrnuta do hesel.');
+            characterPool.push(...largeCharacterArray);
+            console.log(`Druhe pole: ${characterPool}`);
             callback();
         } else if (normalizedAnswer === 'ne') {
             console.log('Velka pismena nebudou zahrnuta do hesel.');
@@ -71,6 +73,8 @@ function askUseNumber(callback) {
         
         if (normalizedAnswer === 'ano') {
             console.log('Cisla budou zahrnuta do hesel.');
+            characterPool.push(...numberArray);
+            console.log(`Treti pole: ${characterPool}`);
             callback()
         } else if (normalizedAnswer === 'ne') {
             console.log('Cisla nebudou zahrnuta do hesel.');
@@ -89,6 +93,8 @@ function askUseSpecialCharacters() {
         
         if (normalizedAnswer === 'ano') {
             console.log('Specialni znaky budou zahrnuta do hesel.');
+            characterPool.push(...specialCharactersArray);
+            console.log(`Ctvrte pole: ${characterPool}`);
             rl.close(); // ukonceni vstupu, pokud je odpoved platna
         } else if (normalizedAnswer === 'ne') {
             console.log('Specialni znaky nebudou zahrnuta do hesel.');
