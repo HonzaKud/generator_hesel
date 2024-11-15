@@ -105,25 +105,34 @@ function askUseSpecialCharacters(callback) {
     });
 }
 
+//funkce na generovani heses
 function generatePasswords() {
-    console.log (`Generuji ${numberOfPasswords} hesel s ${numberOfCharacters} znaky v kazdem hesle`);
+    console.log (`Generuji ${numberOfPasswords} hesel s ${numberOfCharacters} znaky v kazdem hesle`); // vypsani kolik hesel budeme generovat s kolika znaky
     
-    for(let i = 0; i < numberOfPasswords; i++) {
-        let password = '';
+    for(let i = 0; i < numberOfPasswords; i++) { //cyklus na kazde heslo
+        let password = ['']; //vytvoreni promenne password a jeji vyprazdneni
 
-        for(let j = 0; j < numberOfCharacters; j++) {
-            const randomIndex = Math.floor(Math.random() * characterPool.length);
-            password += characterPool[randomIndex];
-
+        if (characterPool.includes(...largeCharacterArray)) { //podminka jestli pole characterPool obsahuje pole largeCharacterArray, tak se prvni znak v hesle vytvori z tohohle pole 
+            password.push(largeCharacterArray[Math.floor(Math.random() * largeCharacterArray.length)]); //pushnuti nahodneho znaku z tohoto pole
         }
-        console.log(`Heslo cislo ${i + 1} je: ${password}`);
+        if (characterPool.includes(...numberArray)) { //podminka jestli pole characterPool obsahuje pole numberArray, tak se dalsi znak v hesle vytvori z tohohle pole 
+            password.push(numberArray[Math.floor(Math.random() * numberArray.length)]); //pushnuti nahodneho znaku z tohoto pole
+        }
+        if (characterPool.includes(...specialCharactersArray)) { //podminka jestli pole characterPool obsahuje pole specialCharactersArray, tak se dalsi znak v hesle vytvori z tohohle pole 
+            password.push(specialCharactersArray[Math.floor(Math.random() * specialCharactersArray.length)]); //pushnuti nahodneho znaku z tohoto pole
+        }
 
+        while (password.length <= numberOfCharacters) { //doplneni zbytku hesla, pokud nema heslo splneny pocet znaku
+            const randomIndex = Math.floor(Math.random() * characterPool.length); //vybere nahodny znak z pole characterPool
+            password.push(characterPool[randomIndex]); //pushnuti nahodneho znaku do hesla
+        }
+
+        password = password.sort(() => Math.random() - 0.5); //promichani hesla 
+
+
+        console.log(`Heslo cislo ${i + 1} je: ${password.join('')}`); //vypsani hesla
     }
-
-
 }
-
-
 
 // Zavolani funkci ve spravnem poradi
 askNumberOfPasswords(() => 
