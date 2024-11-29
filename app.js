@@ -1,26 +1,42 @@
-// Import modulu
-const readline = require("readline");
-const { askNumberOfPasswords, askNumberOfCharacters, askUseUppercase, askUseNumber, askUseSpecialCharacters } = require("./questions");
-const { generatePasswords } = require("./generatePasswords");
-const { state, characterPool } = require("./constants");
+import { generatePasswords } from "./modules/generatePasswords.js"; // Importuje funkci `generatePasswords` z modulu `generatePasswords.js`.
+import readline from "readline"; // Importuje modul `readline`, který umožňuje práci se vstupy a výstupy v konzoli.
 
-// Nastavení rozhraní pro čtení vstupu
-const rl = readline.createInterface({
+const rl = readline.createInterface({ // Vytvoří rozhraní `readline` pro čtení vstupů z konzole a zápis výstupů.
   input: process.stdin,
   output: process.stdout,
 });
 
-console.log("Toto je generator hesel, po zadani vsech vstupu uzivatele se heslo vygeneruje");
+// Funkce pro otázku
+function askQuestion(query) {
+  return new Promise((resolve) => rl.question(query, resolve));
+}
 
-askNumberOfPasswords(rl, state, () =>
-  askNumberOfCharacters(rl, state, () =>
-    askUseUppercase(rl, state, characterPool, () =>
-      askUseNumber(rl, state, characterPool, () =>
-        askUseSpecialCharacters(rl, state, characterPool, () => {
-          rl.close(); // Zavřeme vstup po poslední otázce
-          generatePasswords(state, characterPool); // Spustíme generování hesel
-        })
-      )
-    )
-  )
-);
+// Hlavní funkce
+async function main() {
+  try {
+    const numberOfPasswords = parseInt(await askQuestion("Kolik hesel chcete vygenerovat? (1-9): "));
+    const numberOfCharacters = parseInt(await askQuestion("Kolik znaku v hesle? (8-30): "));
+    const includeUppercase = (await askQuestion("Velká písmena? (ano/ne): ")).toLowerCase() === "ano";
+    const includeNumbers = (await askQuestion("Čísla? (ano/ne): ")).toLowerCase() === "ano";
+    const includeSpecial = (await askQuestion("Speciální znaky? (ano/ne): ")).toLowerCase() === "ano";
+
+    const options = {
+      numberOfPasswords,
+      numberOfCharacters,
+      includeUppercase,
+      includeNumbers,
+      includeSpecial,
+    };
+
+    const passwords = generatePasswords(options);
+    console.log("Vygenerovaná hesla:");
+    console.log(passwords.join("\n"));
+
+  } catch (error) {
+    console.error("Nastala chyba:", error);
+  } finally {
+    rl.close();
+  }
+}
+
+main();
